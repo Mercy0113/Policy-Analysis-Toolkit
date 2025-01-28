@@ -28,6 +28,6 @@
 - `js/`：存放项目的 JavaScript 脚本文件，实现项目的交互功能。
 
 ## 🚀 运行项目
-直接在浏览器中打开 ‘https://Mercy0113.github.io/policy-analysis-toolbox’ ，即可查看项目页面，开启政策分析之旅 🎉。
+直接在浏览器中打开 ‘https://Mercy0113.github.io/policy-analysis-toolbox ’ ，即可查看项目页面，开启政策分析之旅 🎉。
 
 
