@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>政策分析工具箱 - Mercy0113</title>
+    <!-- 引入样式和库 -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.3.3/echarts.min.js"></script>
+    <style>
+        .tool-card {
+            transition: transform 0.3s;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #policyChart {
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        .keyword-tag {
+            background: #f0f9ff;
+            border: 1px solid #4da8ff;
+        }
+
+        /* 新增时效提醒样式 */
+        .deadline-card {
+            background: #fff8f8;
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .urgent {
+            background-color: #ffebee !important;
+        }
+
+        .warning {
+            background-color: #fff3e0 !important;
+        }
+
+        .normal {
+            background-color: #e8f5e9 !important;
+        }
+
+        .countdown-badge {
+            font-size: 0.9em;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">政策分析工具箱</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#database">政策库</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#monitor">舆情监测</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tools">分析工具</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#deadline">时效提醒</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 核心功能模块 -->
+    <div class="container my-5">
+        <!-- 政策数据库模块 -->
+        <section id="database" class="mb-5">
+            <h2 class="mb-4">📚 政策数据库</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card tool-card h-100">
+                        <div class="card-body">
+                            <h5>政策检索系统</h5>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="searchInput" placeholder="输入政策关键词">
+                            </div>
+                            <div id="searchResults" class="list-group">
+                                <!-- 动态加载政策条目 -->
+                                <div class="list-group-item">示例政策1：数字经济十四五规划</div>
+                                <div class="list-group-item">示例政策2：碳中和行动方案</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card tool-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">📈 政策趋势分析</h5>
+                            <div id="policyChart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 舆情监测模块 -->
+        <section id="monitor" class="mb-5">
+            <h2 class="mb-4">🔍 舆情监测中心</h2>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card tool-card h-100">
+                        <div class="card-body">
+                            <h5>监测模板配置</h5>
+                            <form id="monitorForm">
+                                <div class="mb-3">
+                                    <label>监测关键词</label>
+                                    <div id="keywordContainer">
+                                        <span class="badge keyword-tag me-1">数字经济</span>
+                                    </div>
+                                    <input type="text" class="form-control mt-2" id="newKeyword">
+                                    <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="addKeyword()">
+                                        添加关键词</button>
+                                </div>
+                                <button type="submit" class="btn btn-primary">启动监测</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card tool-card h-100">
+                        <div class="card-body">
+                            <h5>实时舆情概览</h5>
+                            <ul id="publicOpinionList" class="list-group">
+                                <li class="list-group-item">监测到 123 条"数字经济"相关信息</li>
+                                <li class="list-group-item">检测到 45 条政策关联讨论</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 分析工具模块 -->
+        <section id="tools">
+            <h2 class="mb-4">🛠️ 分析工具集</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card tool-card h-100">
+                        <div class="card-body">
+                            <h5>政策解读模板</h5>
+                            <textarea class="form-control" rows="5" placeholder="粘贴政策原文..."></textarea>
+                            <button class="btn btn-primary mt-2">生成解读报告</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card tool-card h-100">
+                        <div class="card-body">
+                            <h5>影响评估模型</h5>
+                            <input type="number" class="form-control mb-2" placeholder="受影响人口">
+                            <input type="number" class="form-control mb-2" placeholder="财政投入">
+                            <button class="btn btn-primary">计算影响指数</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card tool-card h-100">
+                        <div class="card-body">
+                            <h5>数据可视化</h5>
+                            <select class="form-select mb-2">
+                                <option>选择图表类型</option>
+                                <option>柱状图</option>
+                                <option>折线图</option>
+                            </select>
+                            <button class="btn btn-primary">生成图表</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 新增时效提醒模块 -->
+        <section id="deadline" class="mb-5">
+            <h2 class="mb-4">⏰ 政策时效提醒</h2>
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="card tool-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-3">
+                                <h5>即将到期政策清单</h5>
+                                <select class="form-select w-25" id="filterSelect" onchange="filterDeadlines()">
+                                    <option value="all">全部</option>
+                                    <option value="urgent">本周到期</option>
+                                    <option value="warning">本月到期</option>
+                                </select>
+                            </div>
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>政策名称</th>
+                                        <th>截止日期</th>
+                                        <th>剩余天数</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="deadlineList">
+                                    <!-- 动态生成提醒内容 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 舆情关键词管理
+        function addKeyword() {
+            const keyword = document.getElementById('newKeyword').value;
+            if (keyword) {
+                const tag = document.createElement('span');
+                tag.className = 'badge keyword-tag me-1';
+                tag.textContent = keyword;
+                document.getElementById('keywordContainer').appendChild(tag);
+                document.getElementById('newKeyword').value = '';
+            }
+        }
+
+        // ECharts政策趋势图表
+        const chartDom = document.getElementById('policyChart');
+        const myChart = echarts.init(chartDom);
+        const option = {
+            xAxis: { data: ['2020', '2021', '2022'] },
+            yAxis: {},
+            series: [{
+                type: 'bar',
+                data: [120, 200, 150],
+                itemStyle: { color: '#4da8ff' }
+            }]
+        };
+        myChart.setOption(option);
+
+        // 搜索功能示例
+        document.getElementById('searchInput').addEventListener('input', function (e) {
+            const searchTerm = e.target.value.toLowerCase();
+            Array.from(document.querySelectorAll('#searchResults div')).forEach(item => {
+                item.style.display = item.textContent.toLowerCase().includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        // 新增时效提醒数据与函数
+        const policyDeadlines = [
+            {
+                name: "高新技术企业认定",
+                date: "2024-03-31",
+                link: "#"
+            },
+            {
+                name: "研发费用加计扣除申报",
+                date: "2024-06-30",
+                link: "#"
+            },
+            {
+                name: "中小企业数字化转型补贴",
+                date: "2024-05-15",
+                link: "#"
+            }
+        ];
+
+        function calculateRemainingDays(endDate) {
+            const today = new Date();
+            const deadline = new Date(endDate);
+            const diffTime = deadline - today;
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        function renderDeadlines(filter = 'all') {
+            const tbody = document.getElementById('deadlineList');
+            tbody.innerHTML = '';
+
+            policyDeadlines.forEach(policy => {
+                const days = calculateRemainingDays(policy.date);
+                let statusClass = '';
+
+                if (days <= 7) {
+                    if (filter !== 'all' && filter !== 'urgent') return;
+                    statusClass = 'urgent';
+                } else if (days <= 30) {
+                    if (filter !== 'all' && filter !== 'warning') return;
+                    statusClass = 'warning';
+                } else {
+                    if (filter !== 'all') return;
+                    statusClass = 'normal';
+                }
+
+                const row = `
+                    <tr class="${statusClass}">
+                        <td>${policy.name}</td>
+                        <td>${policy.date}</td>
+                        <td>
+                            <span class="countdown-badge bg-${days <= 7 ? 'danger' : days <= 30 ? 'warning' : 'success'}">
+                                ${days}天
+                            </span>
+                        </td>
+                        <td>
+                            <a href="${policy.link}" class="btn btn-sm btn-outline-primary">查看详情</a>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function filterDeadlines() {
+            const filter = document.getElementById('filterSelect').value;
+            renderDeadlines(filter);
+        }
+
+        // 初始化渲染
+        document.addEventListener('DOMContentLoaded', function () {
+            renderDeadlines();
+        });
+    </script>
+</body>
+
+</html>
