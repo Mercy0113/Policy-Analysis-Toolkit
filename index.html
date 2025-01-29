@@ -246,6 +246,41 @@
             });
         }
     </script>
+    // 动态加载 ECharts，优先使用本地文件，失败后使用 CDN
+    function loadECharts(callback) {
+        var script = document.createElement('script');
+        script.src = 'libs/echarts.min.js';  // 本地 ECharts 文件
+        script.onload = callback;
+        script.onerror = function () {
+            console.warn('本地 ECharts 加载失败，尝试使用 CDN...');
+            var cdnScript = document.createElement('script');
+            cdnScript.src = 'https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js';
+            cdnScript.onload = callback;
+            document.body.appendChild(cdnScript);
+        };
+        document.body.appendChild(script);
+    }
+
+    // 初始化 ECharts 图表
+    function initChart() {
+        if (typeof echarts !== 'undefined') {
+            var chart = echarts.init(document.getElementById('chart'));
+            var option = {
+                title: { text: '示例图表' },
+                tooltip: {},
+                xAxis: { data: ['A', 'B', 'C', 'D', 'E'] },
+                yAxis: {},
+                series: [{ type: 'bar', data: [5, 20, 36, 10, 10] }]
+            };
+            chart.setOption(option);
+        } else {
+            console.error('ECharts 加载失败！');
+        }
+    }
+
+    // 执行加载
+    loadECharts(initChart);
+</script>
 </body>
 
 </html>
