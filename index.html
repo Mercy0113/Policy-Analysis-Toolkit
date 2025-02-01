@@ -3,10 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>政策分析工具箱 - Mercy0113</title>
-    <!-- 引入样式和库 -->
-    <link href="https://github.com/Mercy0113/Policy-Analysis-Toolkit/raw/main/libs/bootstrap.min.css" rel="stylesheet">
-    <script src="https://github.com/Mercy0113/Policy-Analysis-Toolkit/raw/main/libs/echarts.min.js"></script>
+    
+    <!-- 使用 jsDelivr 作为 GitHub 资源 CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Mercy0113/Policy-Analysis-Toolkit@main/libs/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/Mercy0113/Policy-Analysis-Toolkit@main/libs/echarts.min.js"></script>
+
     <style>
         .tool-card {
             transition: transform 0.3s;
@@ -21,35 +24,6 @@
         #policyChart {
             height: 400px;
             margin: 20px 0;
-        }
-
-        .keyword-tag {
-            background: #f0f9ff;
-            border: 1px solid #4da8ff;
-        }
-
-        /* 新增时效提醒样式 */
-        .deadline-card {
-            background: #fff8f8;
-            border-left: 4px solid #ff6b6b;
-        }
-
-        .urgent {
-            background-color: #ffebee !important;
-        }
-
-        .warning {
-            background-color: #fff3e0 !important;
-        }
-
-        .normal {
-            background-color: #e8f5e9 !important;
-        }
-
-        .countdown-badge {
-            font-size: 0.9em;
-            padding: 4px 8px;
-            border-radius: 12px;
         }
     </style>
 </head>
@@ -73,27 +47,11 @@
         </div>
     </nav>
 
-    <!-- 核心功能模块 -->
+    <!-- 政策趋势分析 -->
     <div class="container my-5">
-        <!-- 政策数据库模块 -->
         <section id="database" class="mb-5">
             <h2 class="mb-4">📚 政策数据库</h2>
             <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card tool-card h-100">
-                        <div class="card-body">
-                            <h5>政策检索系统</h5>
-                            <div class="mb-3">
-                                <input type="text" class="form-control" id="searchInput" placeholder="输入政策关键词">
-                            </div>
-                            <div id="searchResults" class="list-group">
-                                <!-- 动态加载政策条目 -->
-                                <div class="list-group-item">示例政策1：数字经济十四五规划</div>
-                                <div class="list-group-item">示例政策2：碳中和行动方案</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-md-8">
                     <div class="card tool-card h-100">
                         <div class="card-body">
@@ -104,183 +62,47 @@
                 </div>
             </div>
         </section>
-
-        <!-- 舆情监测模块 -->
-        <section id="monitor" class="mb-5">
-            <h2 class="mb-4">🔍 舆情监测中心</h2>
-            <div class="row g-4">
-                <div class="col-md-6">
-                    <div class="card tool-card h-100">
-                        <div class="card-body">
-                            <h5>监测模板配置</h5>
-                            <form id="monitorForm">
-                                <div class="mb-3">
-                                    <label>监测关键词</label>
-                                    <div id="keywordContainer">
-                                        <span class="badge keyword-tag me-1">数字经济</span>
-                                    </div>
-                                    <input type="text" class="form-control mt-2" id="newKeyword">
-                                    <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="addKeyword()">
-                                        添加关键词</button>
-                                </div>
-                                <button type="submit" class="btn btn-primary">启动监测</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card tool-card h-100">
-                        <div class="card-body">
-                            <h5>实时舆情概览</h5>
-                            <ul id="publicOpinionList" class="list-group">
-                                <li class="list-group-item">监测到 123 条"数字经济"相关信息</li>
-                                <li class="list-group-item">检测到 45 条政策关联讨论</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 分析工具模块 -->
-        <section id="tools">
-            <h2 class="mb-4">🛠️ 分析工具集</h2>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card tool-card h-100">
-                        <div class="card-body">
-                            <h5>政策解读模板</h5>
-                            <textarea class="form-control" rows="5" placeholder="粘贴政策原文..."></textarea>
-                            <button class="btn btn-primary mt-2">生成解读报告</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card tool-card h-100">
-                        <div class="card-body">
-                            <h5>影响评估模型</h5>
-                            <input type="number" class="form-control mb-2" placeholder="受影响人口">
-                            <input type="number" class="form-control mb-2" placeholder="财政投入">
-                            <button class="btn btn-primary">计算影响指数</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card tool-card h-100">
-                        <div class="card-body">
-                            <h5>数据可视化</h5>
-                            <select class="form-select mb-2">
-                                <option>选择图表类型</option>
-                                <option>柱状图</option>
-                                <option>折线图</option>
-                            </select>
-                            <button class="btn btn-primary">生成图表</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 新增时效提醒模块 -->
-        <section id="deadline" class="mb-5">
-            <h2 class="mb-4">⏰ 政策时效提醒</h2>
-            <div class="row g-4">
-                <div class="col-12">
-                    <div class="card tool-card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between mb-3">
-                                <h5>即将到期政策清单</h5>
-                                <select class="form-select w-25" id="filterSelect" onchange="filterDeadlines()">
-                                    <option value="all">全部</option>
-                                    <option value="urgent">本周到期</option>
-                                    <option value="warning">本月到期</option>
-                                </select>
-                            </div>
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>政策名称</th>
-                                        <th>截止日期</th>
-                                        <th>剩余天数</th>
-                                        <th>操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="deadlineList">
-                                    <!-- 动态生成提醒内容 -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
     </div>
 
-    <script src="https://github.com/Mercy0113/Policy-Analysis-Toolkit/raw/main/libs/bootstrap.bundle.min.js"></script>
+    <!-- 本地 JS 资源，失败时使用 CDN -->
     <script>
-        // 舆情关键词管理
-        function addKeyword() {
-            const keyword = document.getElementById('newKeyword').value;
-            if (keyword) {
-                const tag = document.createElement('span');
-                tag.className = 'badge keyword-tag me-1';
-                tag.textContent = keyword;
-                document.getElementById('keywordContainer').appendChild(tag);
+        function loadECharts(callback) {
+            var script = document.createElement('script');
+            script.src = 'libs/echarts.min.js';  // 本地 ECharts 文件
+            script.onload = callback;
+            script.onerror = function () {
+                console.warn('本地 ECharts 加载失败，尝试使用 CDN...');
+                var cdnScript = document.createElement('script');
+                cdnScript.src = 'https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js';
+                cdnScript.onload = callback;
+                document.body.appendChild(cdnScript);
+            };
+            document.body.appendChild(script);
+        }
+
+        function initChart() {
+            if (typeof echarts !== 'undefined') {
+                var chart = echarts.init(document.getElementById('policyChart'));
+                var option = {
+                    title: { text: '示例图表' },
+                    tooltip: {},
+                    xAxis: { data: ['A', 'B', 'C', 'D', 'E'] },
+                    yAxis: {},
+                    series: [{ type: 'bar', data: [5, 20, 36, 10, 10] }]
+                };
+                chart.setOption(option);
+            } else {
+                console.error('ECharts 加载失败！');
             }
         }
 
-        // 时效提醒过滤功能
-        function filterDeadlines() {
-            const filter = document.getElementById('filterSelect').value;
-            const allRows = document.querySelectorAll('#deadlineList tr');
-            allRows.forEach(row => {
-                if (filter === 'all') {
-                    row.style.display = '';
-                } else if (filter === 'urgent' && row.dataset.deadline <= 7) {
-                    row.style.display = '';
-                } else if (filter === 'warning' && row.dataset.deadline > 7 && row.dataset.deadline <= 30) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-        }
+        // 加载 ECharts 并初始化图表
+        loadECharts(initChart);
     </script>
-    // 动态加载 ECharts，优先使用本地文件，失败后使用 CDN
-    function loadECharts(callback) {
-        var script = document.createElement('script');
-        script.src = 'libs/echarts.min.js';  // 本地 ECharts 文件
-        script.onload = callback;
-        script.onerror = function () {
-            console.warn('本地 ECharts 加载失败，尝试使用 CDN...');
-            var cdnScript = document.createElement('script');
-            cdnScript.src = 'https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js';
-            cdnScript.onload = callback;
-            document.body.appendChild(cdnScript);
-        };
-        document.body.appendChild(script);
-    }
 
-    // 初始化 ECharts 图表
-    function initChart() {
-        if (typeof echarts !== 'undefined') {
-            var chart = echarts.init(document.getElementById('chart'));
-            var option = {
-                title: { text: '示例图表' },
-                tooltip: {},
-                xAxis: { data: ['A', 'B', 'C', 'D', 'E'] },
-                yAxis: {},
-                series: [{ type: 'bar', data: [5, 20, 36, 10, 10] }]
-            };
-            chart.setOption(option);
-        } else {
-            console.error('ECharts 加载失败！');
-        }
-    }
+    <!-- Bootstrap 组件 -->
+    <script src="https://cdn.jsdelivr.net/gh/Mercy0113/Policy-Analysis-Toolkit@main/libs/bootstrap.bundle.min.js"></script>
 
-    // 执行加载
-    loadECharts(initChart);
-</script>
 </body>
 
 </html>
