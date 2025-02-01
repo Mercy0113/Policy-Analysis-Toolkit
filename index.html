@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>政策分析工具箱 - Mercy0113</title>
     
-    <!-- 使用 jsDelivr 作为 GitHub 资源 CDN -->
+    <!-- Bootstrap & ECharts (使用 jsDelivr 解决 GitHub 资源 404 问题) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Mercy0113/Policy-Analysis-Toolkit@main/libs/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/gh/Mercy0113/Policy-Analysis-Toolkit@main/libs/echarts.min.js"></script>
 
@@ -24,6 +24,16 @@
         #policyChart {
             height: 400px;
             margin: 20px 0;
+        }
+
+        .keyword-tag {
+            background: #f0f9ff;
+            border: 1px solid #4da8ff;
+        }
+
+        .deadline-card {
+            background: #fff8f8;
+            border-left: 4px solid #ff6b6b;
         }
     </style>
 </head>
@@ -47,28 +57,76 @@
         </div>
     </nav>
 
-    <!-- 政策趋势分析 -->
+    <!-- 核心功能模块 -->
     <div class="container my-5">
-        <section id="database" class="mb-5">
-            <h2 class="mb-4">📚 政策数据库</h2>
-            <div class="row g-4">
-                <div class="col-md-8">
-                    <div class="card tool-card h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">📈 政策趋势分析</h5>
-                            <div id="policyChart"></div>
-                        </div>
-                    </div>
-                </div>
+        <section id="database">
+            <h2>📚 政策数据库</h2>
+            <input type="text" class="form-control" id="searchInput" placeholder="输入政策关键词">
+            <div id="searchResults" class="list-group mt-2">
+                <div class="list-group-item">示例政策1：数字经济十四五规划</div>
+                <div class="list-group-item">示例政策2：碳中和行动方案</div>
             </div>
+        </section>
+
+        <section id="monitor" class="mt-5">
+            <h2>🔍 舆情监测中心</h2>
+            <form id="monitorForm">
+                <label>监测关键词</label>
+                <div id="keywordContainer">
+                    <span class="badge keyword-tag me-1">数字经济</span>
+                </div>
+                <input type="text" class="form-control mt-2" id="newKeyword">
+                <button type="button" class="btn btn-secondary mt-2" onclick="addKeyword()">添加关键词</button>
+                <button type="submit" class="btn btn-primary mt-2">启动监测</button>
+            </form>
+        </section>
+
+        <section id="tools" class="mt-5">
+            <h2>🛠️ 分析工具集</h2>
+            <textarea class="form-control" rows="5" placeholder="粘贴政策原文..."></textarea>
+            <button class="btn btn-primary mt-2">生成解读报告</button>
+        </section>
+
+        <section id="deadline" class="mt-5">
+            <h2>⏰ 政策时效提醒</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>政策名称</th>
+                        <th>截止日期</th>
+                        <th>剩余天数</th>
+                    </tr>
+                </thead>
+                <tbody id="deadlineList">
+                    <tr class="deadline-card">
+                        <td>碳中和行动方案</td>
+                        <td>2025-12-31</td>
+                        <td>365</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="policyChart" class="mt-5">
+            <h2>📊 政策趋势分析</h2>
+            <div id="chart" style="height: 400px;"></div>
         </section>
     </div>
 
-    <!-- 本地 JS 资源，失败时使用 CDN -->
     <script>
+        function addKeyword() {
+            const keyword = document.getElementById('newKeyword').value;
+            if (keyword) {
+                const tag = document.createElement('span');
+                tag.className = 'badge keyword-tag me-1';
+                tag.textContent = keyword;
+                document.getElementById('keywordContainer').appendChild(tag);
+            }
+        }
+
         function loadECharts(callback) {
             var script = document.createElement('script');
-            script.src = 'libs/echarts.min.js';  // 本地 ECharts 文件
+            script.src = 'libs/echarts.min.js';
             script.onload = callback;
             script.onerror = function () {
                 console.warn('本地 ECharts 加载失败，尝试使用 CDN...');
@@ -82,11 +140,11 @@
 
         function initChart() {
             if (typeof echarts !== 'undefined') {
-                var chart = echarts.init(document.getElementById('policyChart'));
+                var chart = echarts.init(document.getElementById('chart'));
                 var option = {
-                    title: { text: '示例图表' },
+                    title: { text: '政策趋势分析' },
                     tooltip: {},
-                    xAxis: { data: ['A', 'B', 'C', 'D', 'E'] },
+                    xAxis: { data: ['政策A', '政策B', '政策C', '政策D', '政策E'] },
                     yAxis: {},
                     series: [{ type: 'bar', data: [5, 20, 36, 10, 10] }]
                 };
@@ -96,13 +154,10 @@
             }
         }
 
-        // 加载 ECharts 并初始化图表
         loadECharts(initChart);
     </script>
 
-    <!-- Bootstrap 组件 -->
     <script src="https://cdn.jsdelivr.net/gh/Mercy0113/Policy-Analysis-Toolkit@main/libs/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>
